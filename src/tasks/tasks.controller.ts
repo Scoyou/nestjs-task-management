@@ -1,6 +1,9 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, HttpStatus, Post, UseInterceptors } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { Task } from './task.model';
+import { SentryInterceptor } from '../sentry.interceptor';
+
+@UseInterceptors(SentryInterceptor)
 
 @Controller('tasks')
 export class TasksController {
