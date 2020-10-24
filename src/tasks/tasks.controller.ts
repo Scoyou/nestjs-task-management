@@ -2,6 +2,7 @@ import { Body, Controller, Get, HttpException, HttpStatus, Post, UseInterceptors
 import { TasksService } from './tasks.service';
 import { Task } from './task.model';
 import { SentryInterceptor } from '../sentry.interceptor';
+import { CreateTaskDto } from './create-task.dto';
 
 @UseInterceptors(SentryInterceptor)
 
@@ -15,10 +16,7 @@ export class TasksController {
     }
 
     @Post()
-    createTask(
-        @Body('title') title: string,
-        @Body('descritpion') description: string,
-    ): Task {
-        return this.tasksService.createTask(title, description)
+    createTask(@Body() createTaskDto: CreateTaskDto): Task {
+        return this.tasksService.createTask(createTaskDto)
     }
 }
