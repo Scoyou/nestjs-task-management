@@ -1,4 +1,4 @@
-import { TaskStatus } from '../tasks-status.enum';
+import { TaskStatus } from '../enums/tasks-status.enum';
 import {
   ArgumentMetadata,
   BadRequestException,

@@ -1,5 +1,7 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { TaskStatus } from './tasks-status.enum';
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { TaskStatus } from './enums/tasks-status.enum';
+import { User } from '../auth/user.entity';
+import { TaskPriority } from './enums/task-priority.enum';
 
 // Like rails Model
 
@@ -16,4 +18,13 @@ export class Task extends BaseEntity {
 
     @Column()
     status: TaskStatus;
+
+    @Column()
+    priority: TaskPriority;
+
+    @ManyToOne(type => User, user => user.tasks, { eager: false })
+    user: User
+
+    @Column()
+    userId: number
 }
