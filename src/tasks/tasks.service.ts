@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateTaskDto } from './create-task.dto';
 import { GetTasksFilterDto } from './get-tasks-filter.dto';
@@ -10,19 +10,23 @@ import { TaskPriority } from './enums/task-priority.enum';
 
 @Injectable()
 export class TasksService {
+  private logger = new Logger('TasksService');
   constructor(
     @InjectRepository(TaskRepository)
     private taskRepository: TaskRepository,
   ) {}
 
-  async getTasks(filterDto: GetTasksFilterDto): Promise<Task[]> {
-    return this.taskRepository.getTasks(filterDto);
+  async getTasks(filterDto: GetTasksFilterDto, user: User): Promise<Task[]> {
+    return this.taskRepository.getTasks(filterDto, user);
   }
 
-  async getTaskById(id: number): Promise<Task> {
+  async getTaskById(id: number, user: User): Promise<Task> {
     const found = await this.taskRepository.findOne({ where: { id } });
 
     if (!found) {
+      this.logger.error(
+        `User ${user.username} tried to fetch non-existant task ${id}`,
+      );
       throw new NotFoundException(`Task with ID: ${id} not found`);
     }
 
@@ -35,19 +39,38 @@ export class TasksService {
 
   async updateTaskStatus(
     id: number,
-    status: TaskStatus
+    status: TaskStatus,
+    user: User,
   ): Promise<Task> {
-    const task = await this.getTaskById(id);
+    const task = await this.getTaskById(id, user);
     task.status = status;
-    await task.save();
-    return task;
+    try {
+      await task.save();
+      return task;
+    } catch (error) {
+      this.logger.error(
+        `Problem updating task status. Task ID: ${id}, User: ${user.username}, Status: ${status}`,
+        error.stack
+      );
+    }
   }
 
-  async updateTaskPriority(id: number, priority: TaskPriority): Promise<Task> {
-    const task = await this.getTaskById(id);
+  async updateTaskPriority(
+    id: number,
+    priority: TaskPriority,
+    user: User,
+  ): Promise<Task> {
+    const task = await this.getTaskById(id, user);
     task.priority = priority;
-    await task.save();
-    return task;
+    try {
+      await task.save();
+      return task;
+    } catch (error) {
+      this.logger.error(
+        `Problem updating task priority. Task ID: ${id}, User: ${user.username}, Priority: ${priority}`,
+        error.stack
+      );
+    }
   }
 
   async deleteTask(id: number): Promise<void> {

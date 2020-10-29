@@ -25,18 +25,26 @@ import { User } from '../auth/user.entity';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { TaskPriority } from './enums/task-priority.enum';
 import { TaskPriorityValidationPipe } from './pipes/task-priority-validation.pipe';
+import { Logger } from '@nestjs/common';
 
 @UseInterceptors(SentryInterceptor)
 @Controller('tasks')
 @UseGuards(AuthGuard())
 export class TasksController {
+  private logger = new Logger('TasksController');
   constructor(private tasksService: TasksService) {}
 
   @Get()
   getTasks(
     @Query(ValidationPipe) filterDto: GetTasksFilterDto,
+    @GetUser() user: User,
   ): Promise<Task[]> {
-    return this.tasksService.getTasks(filterDto);
+    this.logger.verbose(
+      `User: ${user.username} retrieving all tasks. Filters: ${JSON.stringify(
+        filterDto,
+      )}`,
+    );
+    return this.tasksService.getTasks(filterDto, user); // user is passed into the service for logging
   }
 
   @Get('/:id')
@@ -44,7 +52,7 @@ export class TasksController {
     @Param('id', ParseIntPipe) id: number,
     @GetUser() user: User,
   ): Promise<Task> {
-    return this.tasksService.getTaskById(id);
+    return this.tasksService.getTaskById(id, user);
   }
 
   @Post()
@@ -53,7 +61,11 @@ export class TasksController {
     @Body() createTaskDto: CreateTaskDto,
     @GetUser() user: User,
   ): Promise<Task> {
-    console.log(user);
+    this.logger.verbose(
+      `User: ${user.username} created a task. Data: ${JSON.stringify(
+        createTaskDto,
+      )} `,
+    );
     return this.tasksService.createTask(createTaskDto, user);
   }
 
@@ -61,20 +73,32 @@ export class TasksController {
   updateTaskStatus(
     @Param('id', ParseIntPipe) id: number,
     @Body('status', TaskStatusValidationPipe) status: TaskStatus,
+    @GetUser() user: User,
   ): Promise<Task> {
-    return this.tasksService.updateTaskStatus(id, status);
+    this.logger.verbose(
+      `User: ${user.username} updated a task status. Task ID: ${id}, Status: ${status} `,
+    );
+    return this.tasksService.updateTaskStatus(id, status, user);
   }
 
   @Patch('/:id/priority')
   updateTaskPriority(
     @Param('id', ParseIntPipe) id: number,
     @Body('priority', TaskPriorityValidationPipe) priority: TaskPriority,
+    @GetUser() user: User,
   ): Promise<Task> {
-    return this.tasksService.updateTaskPriority(id, priority);
+    this.logger.verbose(
+      `User: ${user.username} updated a task priority. Task ID: ${id}, Priority: ${priority} `,
+    );
+    return this.tasksService.updateTaskPriority(id, priority, user);
   }
 
   @Delete()
-  deleteTask(@Param('id', ParseIntPipe) id: number): Promise<void> {
+  deleteTask(
+    @Param('id', ParseIntPipe) id: number,
+    @GetUser() user: User,
+  ): Promise<void> {
+    this.logger.verbose(`User: ${user.username} deleted task ${id} `);
     return this.tasksService.deleteTask(id);
   }
 }
