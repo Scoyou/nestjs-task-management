@@ -93,7 +93,7 @@ export class TasksController {
     return this.tasksService.updateTaskPriority(id, priority, user);
   }
 
-  @Delete()
+  @Delete('/:id')
   deleteTask(
     @Param('id', ParseIntPipe) id: number,
     @GetUser() user: User,

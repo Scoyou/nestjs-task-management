@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { AfterUpdate, BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { TaskStatus } from './enums/tasks-status.enum';
 import { User } from '../auth/user.entity';
 import { TaskPriority } from './enums/task-priority.enum';
@@ -27,4 +27,5 @@ export class Task extends BaseEntity {
 
     @Column()
     userId: number
+
 }
