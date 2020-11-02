@@ -1,11 +1,13 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { Task } from './task.entity';
-import { CreateTaskDto } from './create-task.dto';
+import { CreateTaskDto } from './dto/create-task.dto';
 import { TaskStatus } from './enums/tasks-status.enum';
-import { GetTasksFilterDto } from './get-tasks-filter.dto';
+import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { User } from '../auth/user.entity';
 import { TaskPriority } from './enums/task-priority.enum';
-import { InternalServerErrorException, Logger } from '@nestjs/common';
+import { InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
+import { Project } from 'src/projects/project.entity';
+import { ProjectRepository } from '../projects/project.repository';
 
 @EntityRepository(Task)
 export class TaskRepository extends Repository<Task> {
@@ -46,14 +48,21 @@ export class TaskRepository extends Repository<Task> {
   }
 
   async createTask(createTaskDto: CreateTaskDto, user: User): Promise<Task> {
-    const { title, description } = createTaskDto;
+    const { title, description, project } = createTaskDto;
     const task = new Task();
-
     task.title = title;
     task.description = description;
     task.status = TaskStatus.OPEN;
     task.priority = TaskPriority.MAINTENANCE;
     task.user = user;
+    task.project = await Project.findOne({ identifier: project })
+
+    if (task.project === undefined) {
+      throw new NotFoundException(`Could not find a project with identifier ${project}`)
+    }
+
+    task.projectIdentifier = project
+
     try {
       await task.save();
     } catch (error) {
@@ -64,6 +73,7 @@ export class TaskRepository extends Repository<Task> {
     }
 
     delete task.user;
+    delete task.project;
     return task;
   }
 }

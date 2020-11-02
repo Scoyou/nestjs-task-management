@@ -12,6 +12,8 @@ async function bootstrap() {
   Sentry.init({
     dsn: 'https://5bcceabaa53f4f859a3d52d369fe7339@o451084.ingest.sentry.io/5480645',
   });
+
+  app.enableCors();
   
   const port = process.env.PORT || serverConfig.port
   await app.listen(port);

@@ -15,8 +15,8 @@ import {
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { SentryInterceptor } from '../sentry.interceptor';
-import { CreateTaskDto } from './create-task.dto';
-import { GetTasksFilterDto } from './get-tasks-filter.dto';
+import { CreateTaskDto } from './dto/create-task.dto';
+import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { TaskStatusValidationPipe } from './pipes/task-status-validation.pipe';
 import { Task } from './task.entity';
 import { TaskStatus } from './enums/tasks-status.enum';
@@ -93,7 +93,7 @@ export class TasksController {
     return this.tasksService.updateTaskPriority(id, priority, user);
   }
 
-  @Delete()
+  @Delete('/:id')
   deleteTask(
     @Param('id', ParseIntPipe) id: number,
     @GetUser() user: User,
