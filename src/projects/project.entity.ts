@@ -1,4 +1,3 @@
-import { NotFoundException } from '@nestjs/common';
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Task } from '../tasks/task.entity';
 

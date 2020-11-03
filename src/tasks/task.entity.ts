@@ -24,7 +24,7 @@ export class Task extends BaseEntity {
     priority: TaskPriority;
 
     @ManyToOne(type => User, user => user.tasks, { eager: false })
-    user: User
+    user: User 
 
     @ManyToOne(type => Project, project => project.tasks, { eager: false })
     project: Project
