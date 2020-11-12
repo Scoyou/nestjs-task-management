@@ -56,6 +56,7 @@ export class TaskRepository extends Repository<Task> {
     task.priority = TaskPriority.MAINTENANCE;
     task.user = user;
     task.project = await Project.findOne({ identifier: project })
+    console.log(user)
 
     if (task.project === undefined) {
       throw new NotFoundException(`Could not find a project with identifier ${project}`)

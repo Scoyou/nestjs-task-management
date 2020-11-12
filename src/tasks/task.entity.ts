@@ -1,8 +1,9 @@
-import { AfterUpdate, BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { AfterUpdate, BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { TaskStatus } from './enums/tasks-status.enum';
 import { User } from '../auth/user.entity';
 import { TaskPriority } from './enums/task-priority.enum';
 import { Project } from '../projects/project.entity';
+import { Comment } from '../comments/comment.entity';
 
 // Like rails Model
 
@@ -28,6 +29,9 @@ export class Task extends BaseEntity {
 
     @ManyToOne(type => Project, project => project.tasks, { eager: false })
     project: Project
+
+    @OneToMany(type => Comment, comment => comment.task, { eager: true } )
+    comments: Comment[];
 
     @Column()
     userId: number
