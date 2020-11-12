@@ -15,7 +15,7 @@ export class TaskRepository extends Repository<Task> {
 
   async getTasks(filterDto: GetTasksFilterDto, user: User): Promise<Task[]> {
     const { status, search, userId } = filterDto;
-    const query = this.createQueryBuilder('task');
+    const query = this.createQueryBuilder('task').orderBy("task.id");
 
     if (userId) {
       const user = await User.findOne({ where: { id: userId } });
@@ -56,6 +56,7 @@ export class TaskRepository extends Repository<Task> {
     task.priority = TaskPriority.MAINTENANCE;
     task.user = user;
     task.project = await Project.findOne({ identifier: project })
+    console.log(user)
 
     if (task.project === undefined) {
       throw new NotFoundException(`Could not find a project with identifier ${project}`)

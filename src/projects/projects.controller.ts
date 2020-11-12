@@ -7,7 +7,6 @@ import {
   ParseIntPipe,
   Post,
   Body,
-  Delete,
   Patch,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
