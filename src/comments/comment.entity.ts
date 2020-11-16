@@ -1,4 +1,4 @@
-import { AfterUpdate, BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { AfterUpdate, BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { User } from '../auth/user.entity';
 import { Project } from '../projects/project.entity';
 import { Task } from '../tasks/task.entity';
@@ -22,5 +22,8 @@ export class Comment extends BaseEntity {
 
     @Column()
     taskId: number;
+
+    @CreateDateColumn({ name: 'created_at' })
+    public createdAt!: Date;
 
 }

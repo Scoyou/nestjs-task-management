@@ -1,4 +1,4 @@
-import { AfterUpdate, BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { AfterUpdate, BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { TaskStatus } from './enums/tasks-status.enum';
 import { User } from '../auth/user.entity';
 import { TaskPriority } from './enums/task-priority.enum';
@@ -38,5 +38,8 @@ export class Task extends BaseEntity {
 
     @Column()
     projectIdentifier: string;
+
+    @CreateDateColumn({ name: 'created_at' })
+    public createdAt!: Date;
 
 }

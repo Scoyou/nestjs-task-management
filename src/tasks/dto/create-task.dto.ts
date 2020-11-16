@@ -1,4 +1,5 @@
 import { IsNotEmpty, } from "class-validator";
+import { TaskPriority } from "../enums/task-priority.enum";
 
 export class CreateTaskDto {
     @IsNotEmpty()
@@ -9,6 +10,9 @@ export class CreateTaskDto {
 
     @IsNotEmpty()
     project: string;
+
+    @IsNotEmpty()
+    priority: TaskPriority;
 
 }
 
