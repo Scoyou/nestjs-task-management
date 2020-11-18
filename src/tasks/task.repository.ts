@@ -14,7 +14,7 @@ export class TaskRepository extends Repository<Task> {
   private logger = new Logger();
 
   async getTasks(filterDto: GetTasksFilterDto, user: User): Promise<Task[]> {
-    const { status, search, userId } = filterDto;
+    const { status, search, userId, projectIdentifier } = filterDto;
     const query = this.createQueryBuilder('task').orderBy("task.createdAt", 'DESC');
 
     if (userId) {
@@ -25,6 +25,11 @@ export class TaskRepository extends Repository<Task> {
     if (status) {
       query.andWhere('task.status = :status', { status });
     }
+
+    if (projectIdentifier) {
+      query.andWhere('task.projectIdentifier = :projectIdentifier', { projectIdentifier });
+    }
+
 
     if (search) {
       query.andWhere(

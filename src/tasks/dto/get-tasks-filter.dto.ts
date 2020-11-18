@@ -18,4 +18,8 @@ export class GetTasksFilterDto {
     @IsOptional()
     @IsNotEmpty()
     search: string;
+
+    @IsOptional()
+    @IsNotEmpty()
+    projectIdentifier: string;
 }
