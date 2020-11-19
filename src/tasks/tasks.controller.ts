@@ -81,6 +81,31 @@ export class TasksController {
     return this.tasksService.updateTaskStatus(id, status, user);
   }
 
+
+  @Patch('/:id/description')
+  updateTaskDescritpion(
+    @Param('id', ParseIntPipe) id: number,
+    @Body('description') description: string,
+    @GetUser() user: User,
+  ): Promise<Task> {
+    this.logger.verbose(
+      `User: ${user.username} updated a task description. Task ID: ${id}, new descritpion: ${description} `,
+    );
+    return this.tasksService.updateTaskDescription(id, description, user);
+  }
+
+  @Patch('/:id/title')
+  updateTaskTitle(
+    @Param('id', ParseIntPipe) id: number,
+    @Body('title') title: string,
+    @GetUser() user: User,
+  ): Promise<Task> {
+    this.logger.verbose(
+      `User: ${user.username} updated a task title. Task ID: ${id}, new title: ${title} `,
+    );
+    return this.tasksService.updateTaskTitle(id, title, user);
+  }
+
   @Patch('/:id/priority')
   updateTaskPriority(
     @Param('id', ParseIntPipe) id: number,

@@ -55,6 +55,42 @@ export class TasksService {
     }
   }
 
+  async updateTaskDescription(
+    id: number,
+    description: string,
+    user: User,
+  ): Promise<Task> {
+    const task = await this.getTaskById(id, user);
+    task.description = description;
+    try {
+      await task.save();
+      return task;
+    } catch (error) {
+      this.logger.error(
+        `Problem updating task description. Task ID: ${id}, User: ${user.username}, description: ${status}`,
+        error.stack
+      );
+    }
+  }
+
+  async updateTaskTitle(
+    id: number,
+    title: string,
+    user: User,
+  ): Promise<Task> {
+    const task = await this.getTaskById(id, user);
+    task.title = title;
+    try {
+      await task.save();
+      return task;
+    } catch (error) {
+      this.logger.error(
+        `Problem updating task title. Task ID: ${id}, User: ${user.username}, title: ${status}`,
+        error.stack
+      );
+    }
+  }
+
   async updateTaskPriority(
     id: number,
     priority: TaskPriority,
