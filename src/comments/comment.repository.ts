@@ -26,7 +26,7 @@ export class CommentRepository extends Repository<Comment> {
     comment.task = await Task.findOne({ id: taskId });
     comment.user = user;
     comment.taskId = taskId;
-    comment.userId = user.id;
+    comment.userName = user.username;
     try {
       await comment.save();
     } catch (error) {

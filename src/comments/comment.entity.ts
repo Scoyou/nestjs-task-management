@@ -18,7 +18,7 @@ export class Comment extends BaseEntity {
     task: Task
 
     @Column()
-    userId: number;
+    userName: string;
 
     @Column()
     taskId: number;
